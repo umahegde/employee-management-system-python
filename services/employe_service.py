@@ -1,6 +1,6 @@
 import json
 
-file_name = "data.json"
+file_name = "./data/data.json"
 
 class EmployeeService:
 
@@ -10,6 +10,7 @@ class EmployeeService:
                 return  json.load(json_file)
 
         except:
+            print("File not found")
             return []
 
 
@@ -42,12 +43,13 @@ class EmployeeService:
         return employees
     def delete_employee(self,emp_id):
         employees = self.load_data()
+        print("employess",employees)
         for emp in employees :
             if emp["emp_id"] == emp_id:
                 employees.remove(emp)
                 self.save_data(employees)
                 return True
-            return False
+        return False
 
 
     def update_employee(self, emp_id,update_employee):
