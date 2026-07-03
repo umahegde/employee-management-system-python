@@ -3,24 +3,32 @@
 from handler.employee_handler import employee_menu
 from handler.analytic_handler import analytics_menu
 
-while True:
+def main():
+    """Main menu for Employee Management System."""
 
-    print("\nMain Menu")
-    print("1. Employee")
-    print("2. Analytics")
-    print("3. Exit")
+    while True:
 
-    choice = input("Enter Choice: ")
+        print("\nMain Menu")
+        print("1. Employee")
+        print("2. Analytics")
+        print("3. Exit")
 
-    if choice == "1":
-        employee_menu()
+        choice = input("Enter Choice: ")
 
-    elif choice == "2":
-        analytics_menu()
+        if choice == "1":
+         employee_menu()
 
-    elif choice == "3":
-        print("Thank You!")
-        break
+        elif choice == "2":
+            analytics_menu()
+
+        elif choice == "3":
+            print("Thank You!")
+            break
+        else:
+            print("❌ Invalid choice. Please try again.")
+
+if __name__ == "__main__":
+    main()
 
 
 

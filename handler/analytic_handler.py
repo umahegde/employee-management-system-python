@@ -1,10 +1,7 @@
-from pip._internal.utils import deprecation
-
-from services.analytics import DataAnalytics
-from services.employe_service import EmployeeService
-
+from services.analytics_service import DataAnalytics
+from utils.display import display_employee_details
 analytics = DataAnalytics()
-service = EmployeeService()
+
 
 def analytics_menu():
 
@@ -23,22 +20,28 @@ def analytics_menu():
 
         choice = input("Enter Choice: ")
 
-
         if choice == "1":
             print(analytics.total_employees())
         elif choice == "2":
-            print(analytics.highest_salary_employee())
+            employee = analytics.highest_salary_employee()
+            display_employee_details(employee)
         elif choice == "3":
-            print(analytics.lowest_salary_employee())
+            employee = analytics.lowest_salary_employee()
+            display_employee_details(employee)
         elif choice == "4":
             department = input("Enter Department: ")
-            print(analytics.employee_by_department(department))
+            employees = analytics.employee_by_department(department)
+            for employee in employees:
+                display_employee_details(employee)
         elif choice == "5":
             salary = input("Enter Salary of Employee: ")
             print(analytics.employee_above_salary(salary))
         elif choice == "6":
-            print(analytics.group_by_deparment())
+            print(analytics.group_by_department())
         elif choice == "7":
-            print(analytics.average_salary_employee())
+            average = analytics.average_salary_employee()
+            print(f"Average Salary: {average:.2f}")
         elif choice == "8":
             break
+        else:
+            print("❌ Invalid choice. Please try again.")
