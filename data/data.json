@@ -1,9 +1,9 @@
 [
     {
         "emp_id": "7",
-        "name": "Suma",
-        "department": "Teacher",
-        "salary": "35000"
+        "name": "UYT",
+        "department": "HR",
+        "salary": "33330"
     },
     {
         "emp_id": "1",
@@ -20,8 +20,8 @@
     {
         "emp_id": "4",
         "name": "Uma",
-        "department": "Marketing",
-        "salary": "100"
+        "department": "IT",
+        "salary": "465657"
     },
     {
         "emp_id": "9",

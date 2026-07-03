@@ -1,5 +1,7 @@
+from employee_management_system.utils.constants import DEPARTMENTS
+
 class Validation:
-    def validate_emp_id(self,emp_id):
+    def validate_emp_id(self, emp_id):
         if not emp_id.strip():
           return False, "Employee ID cannot be empty"
 
@@ -8,7 +10,7 @@ class Validation:
 
         return True, ""
 
-    def validate_name(self,name):
+    def validate_name(self, name):
         if not name.strip():
             return False, "Employee name cannot be empty"
         if len(name) < 3:
@@ -18,21 +20,13 @@ class Validation:
             return False, "Name should contain only alphabets"
         return True,""
 
-    def validate_department(self,department):
-
-        departments = [
-        "IT",
-        "HR",
-        "Finance",
-        "Admin",
-        "Marketing"
-        ]
-
-        if department not in departments:
+    def validate_department(self, department):
+        department = department.strip()
+        if department not in DEPARTMENTS:
          return False, "Invalid Department"
 
         return True, ""
-    def validate_salary(self,salary):
+    def validate_salary(self, salary):
 
         try:
 
@@ -47,7 +41,7 @@ class Validation:
 
             return False, "Salary should be numeric"
 
-    def get_valid_input(self,prompt, validation_function):
+    def get_valid_input(self, prompt, validation_function):
 
             while True:
 
