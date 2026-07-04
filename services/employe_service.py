@@ -1,5 +1,6 @@
 import json
 from employee_management_system.utils.constants import DATA_FILE
+from employee_management_system.utils.logger import logger
 
 class EmployeeService:
 
@@ -8,16 +9,18 @@ class EmployeeService:
             with open(DATA_FILE) as json_file:
                 return  json.load(json_file)
 
-
         except FileNotFoundError:
-            print("File not found")
+            logger.exception("Employee data file not found.")
             return []
 
 
     def save_data(self,employees:list[dict])->None:
-
-        with open(DATA_FILE, 'w') as outfile:
-            json.dump(employees, outfile, indent = 4)
+        try:
+            with open(DATA_FILE, 'w') as outfile:
+                json.dump(employees, outfile, indent=4)
+            logger.info("Employee data saved successfully.")
+        except Exception:
+            logger.exception("Failed to save employee data.")
 
     def add_employee(self, employee:dict)->None:
         employees = self.load_data()
@@ -34,6 +37,7 @@ class EmployeeService:
             if emp["emp_id"] == emp_id:
                 return  emp
         return None
+
     def sort_by_salary(self)->list[dict]:
         employees = self.load_data()
         employees.sort(
@@ -51,7 +55,7 @@ class EmployeeService:
         return False
 
 
-    def updated_employee(self, emp_id:str,update_employee)->bool:
+    def update_employee(self, emp_id:str,update_employee)->bool:
         employees = self.load_data()
         for index, employee in enumerate(employees):
 

@@ -1,5 +1,7 @@
 from services.analytics_service import DataAnalytics
 from utils.display import display_employee_details
+from employee_management_system.utils.logger import logger
+
 analytics = DataAnalytics()
 
 
@@ -38,9 +40,11 @@ def analytics_menu():
             print(analytics.employee_above_salary(salary))
         elif choice == "6":
             print(analytics.group_by_department())
+            logger.info(f"User filtered employees by department")
         elif choice == "7":
             average = analytics.average_salary_employee()
             print(f"Average Salary: {average:.2f}")
+            logger.info("User viewed average salary.")
         elif choice == "8":
             break
         else:
