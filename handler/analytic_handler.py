@@ -1,6 +1,6 @@
 from services.analytics_service import DataAnalytics
 from utils.display import display_employee_details
-from employee_management_system.utils.logger import logger
+from utils.logger import logger
 
 analytics = DataAnalytics()
 
