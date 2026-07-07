@@ -1,4 +1,4 @@
-from employee_management_system.utils.constants import DEPARTMENTS
+from utils.constants import DEPARTMENTS
 
 class Validation:
     def validate_emp_id(self, emp_id:str)->tuple[bool, str]:

@@ -1,9 +1,13 @@
-from employee_management_system.services.employe_service import EmployeeService
-from employee_management_system.models.employee import Employee
-from employee_management_system.utils.validation import Validation
-from employee_management_system.utils.constants import DEPARTMENTS
+from services.employe_service import EmployeeService
+from models.employee import Employee
+from utils.validation import Validation
+from utils.constants import DEPARTMENTS
 from utils.display import display_employee_details
-
+from utils.logger import logger
+from exceptions.employee_exception import (
+    EmployeeNotFoundError,
+    DuplicateEmployeeError,
+)
 service = EmployeeService()
 validation = Validation()
 
@@ -23,7 +27,6 @@ def get_employee_details(include_emp_id=True):
     )
 
     print("\nAvailable Departments:")
-
     for department in DEPARTMENTS:
         print(f"- {department}")
 
@@ -40,7 +43,7 @@ def get_employee_details(include_emp_id=True):
 
 def employee_menu():
     while True:
-        print('\nemployee managemnet system')
+        print('\nEmployee managemnet system')
         print('1. Add Employee')
         print('2. View Employee')
         print('3.', 'Search Employee')
@@ -54,9 +57,14 @@ def employee_menu():
 
             employee = get_employee_details()
 
-            service.add_employee(employee.to_dict())
+            try:
+                service.add_employee(employee.to_dict())
+                print("Employee Added Successfully")
+                print("Employee Added Successfully")
+                logger.info(f"Employee added successfully. Employee ID: {employee.emp_id}")
 
-            print("Employee Added Successfully")
+            except DuplicateEmployeeError as error:
+                print(error)
 
         elif choice == '2':
             employees = service.get_all_employees()
@@ -66,31 +74,35 @@ def employee_menu():
         elif choice == '3':
             emp_id = validation.get_valid_input("Enter Employee ID: ",validation.validate_emp_id)
 
-            employee = service.employee_search(emp_id)
-            if employee:
+            try:
+                employee = service.search_employee(emp_id)
                 display_employee_details(employee)
-            else:
-                print("employee not found")
+
+            except EmployeeNotFoundError as error:
+                print(error)
+                logger.warning(str(error))
 
         elif choice == '4':
             emp_id = validation.get_valid_input(
                 "Enter Employee ID: ",
                 validation.validate_emp_id
             )
-
-            employee = service.search_employee(emp_id)
-            if employee:
+            try:
+                service.search_employee(emp_id)
                 update_details = get_employee_details(False)
                 updated_employee = {
-                    "emp_id": emp_id,
-                    "name": update_details.name,
-                    "department": update_details.department,
-                    "salary": update_details.salary
+                        "emp_id": emp_id,
+                        "name": update_details.name,
+                        "department": update_details.department,
+                        "salary": update_details.salary
                 }
-                service.updated_employee(emp_id, updated_employee)
+                service.update_employee(emp_id, updated_employee)
                 print("Employee Updated Successfully")
-            else:
-                print("employee not found")
+                logger.info(f"Employee {emp_id} Updated Successfully")
+
+            except EmployeeNotFoundError as error:
+                print(error)
+                logger.warning(str(error))
 
         elif choice == '5':
             employee_list = service.sort_by_salary()
@@ -105,12 +117,15 @@ def employee_menu():
 
             is_deleted = service.delete_employee(emp_id)
             if is_deleted:
-                print("Employee Deleted Successfully")
+                print(f"Employee {emp_id} Deleted Successfully")
+                logger.info(f"Employee {emp_id} Deleted Successfully")
             else:
-                print("employee not found")
+                print(f"Employee not found. Employee ID: {emp_id}.")
+                logger.warning(f"Employee not found. Employee ID: {emp_id}.")
 
         elif choice == '7':
             print("Thank you for using this program")
             break
         else:
-            print("please enter a valid choice")
+            print("Please enter a valid choice")
+

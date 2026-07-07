@@ -1,4 +1,4 @@
-from employee_management_system.services.employe_service import EmployeeService
+from services.employe_service import EmployeeService
 
 
 employee_service = EmployeeService()
