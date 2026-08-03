@@ -1,21 +1,8 @@
 # This is a sample Python script.
 # Press ⌃F5 to execute it or replace it with your code.
+from handler.employee_handler import employee_menu
+from handler.analytic_handler import analytics_menu
 
-
-from fastapi import FastAPI
-
-from api.employee_routes import get_employees
-from api.employee_routes import router
-
-app = FastAPI()
-
-@app.get("/")
-def home():
-    return {"message": "Welcome to Employee Management System"}
-
-app.include_router(router)
-
-'''
 def main():
     """Main menu for Employee Management System."""
 
@@ -43,7 +30,7 @@ def main():
 if __name__ == "__main__":
     main()
 
-'''
+
 
 
 

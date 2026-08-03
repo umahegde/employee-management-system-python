@@ -9,6 +9,7 @@ class DataAnalytics:
     def total_employees(self)->int:
         employees = employee_service.get_all_employees()
         return len(employees)
+        return len(employees)
 
 
     def employee_by_department(self, department:str)->list[dict]:
