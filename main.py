@@ -3,11 +3,21 @@
 
 
 from fastapi import FastAPI
-
 from api.employee_routes import get_employees
 from api.employee_routes import router
+from exceptions.employee_exception import EmployeeNotFoundError, DuplicateEmployeeError
+from exceptions.exception_handler import employee_not_found_handler,duplicate_employee_handler
 
 app = FastAPI()
+app.add_exception_handler(
+    EmployeeNotFoundError,
+    employee_not_found_handler
+)
+app.add_exception_handler(
+    DuplicateEmployeeError,
+    duplicate_employee_handler
+)
+
 
 @app.get("/")
 def home():
