@@ -1,11 +1,5 @@
 [
     {
-        "emp_id": "29",
-        "name": "Dyuti",
-        "department": "IT",
-        "salary": 10000
-    },
-    {
         "emp_id": "69",
         "name": "Tanmayi",
         "department": "IT",
@@ -22,5 +16,17 @@
         "name": "Uma",
         "department": "Admin",
         "salary": 50000
+    },
+    {
+        "emp_id": "10",
+        "name": "Uma",
+        "department": "IT",
+        "salary": 1000
+    },
+    {
+        "emp_id": "20",
+        "name": "Tanu",
+        "department": "IT",
+        "salary": 2000
     }
 ]
