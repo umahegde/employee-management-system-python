@@ -5,7 +5,7 @@ from services.employe_service import EmployeeService
 from services.analytics_service import DataAnalytics
 from exceptions.employee_exception import EmployeeNotFoundError, DuplicateEmployeeError
 from fastapi import HTTPException
-from schemas.employee_schema import EmployeeRequest
+from schemas.employee_schema import EmployeeRequest,UpdateEmployeeRequest
 
 router = APIRouter()
 service = EmployeeService()
@@ -63,5 +63,32 @@ def add_employee(employee: EmployeeRequest):
             status_code=409,
             detail=str(error)
         )
+
+
+@router.put("/employees/{emp_id}", status_code=200)
+def update_employee(emp_id: str,employee: UpdateEmployeeRequest):
+    try:
+        employee_data = employee.model_dump()
+        employee_data["emp_id"] = emp_id
+        service.update_employee(emp_id,employee_data)
+        return {"message": "Employee Updated successfully"}
+
+    except EmployeeNotFoundError as error:
+        raise HTTPException(
+            status_code=404,
+            detail=str(error)
+        )
+
+@router.delete("/employees/{emp_id}", status_code=200)
+def delete_employee(emp_id: str):
+    try:
+        service.delete_employee(emp_id)
+        return {"message": "Employee Deleted successfully"}
+    except EmployeeNotFoundError as error:
+        raise HTTPException(
+            status_code=404,
+            detail=str(error)
+        )
+
 
 

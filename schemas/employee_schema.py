@@ -5,3 +5,8 @@ class EmployeeRequest(BaseModel):
     name: str
     department: str
     salary: int
+
+class UpdateEmployeeRequest(BaseModel):
+    name: str
+    department: str
+    salary: int
