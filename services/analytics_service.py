@@ -1,54 +1,59 @@
-from services.employe_service import EmployeeService
 
+from repositories.analytics_repository import AnalyticsRepository
+from exceptions.employee_exception import (
+    EmployeeNotFoundError,
 
-employee_service = EmployeeService()
+)
 
 class DataAnalytics:
+    def __init__(self):
+        self.repository = AnalyticsRepository()
+
+    def total_employees(self, db):
+        return self.repository.total_employees(db)
+
+    def highest_salary_employee(self,db) :
+        return self.repository.highest_salary_employee(db)
 
 
-    def total_employees(self)->int:
-        employees = employee_service.get_all_employees()
-        return len(employees)
-        return len(employees)
+    def lowest_salary_employee(self,db) :
+        return self.repository.lowest_salary_employee(db)
+
+    def average_salary_employee(self,db) :
+        return self.repository.average_salary_employee(db)
+
+    def group_by_department(self,db) :
+        rows = self.repository.group_by_department(db)
+
+        return {
+            department: count
+            for department, count in rows
+        }
+
+    def sort_by_salary(self,db) :
+        return  self.repository.sort_by_salary(db)
 
 
-    def employee_by_department(self, department:str)->list[dict]:
-        employees = employee_service.get_all_employees()
-        department_employee = [employee for employee in employees if employee["department"] == department]
-        return department_employee
+    def employee_by_department(self,db, department):
+        employees = self.repository.employee_by_department(
+            db, department
+        )
 
-    def highest_salary_employee(self)->dict | None:
-        employees = employee_service.get_all_employees()
-        return max(employees, key=lambda emp: float(emp["salary"]))
-
-
-    def lowest_salary_employee(self)->dict | None:
-        employees = employee_service.get_all_employees()
-        return min(employees, key=lambda emp: float(emp["salary"]))
-
-    def average_salary_employee(self)->float:
-        employees = employee_service.get_all_employees()
         if not employees:
-            return 0
-        salary = [int(employee["salary"]) for employee in employees ]
-        return sum(salary)/len(employees)
+            raise EmployeeNotFoundError(
+                f"No employees found in department {department}."
+            )
 
+        return employees
 
-    def employee_above_salary(self, salary:str)->list[dict]:
-        employees = employee_service.get_all_employees()
-        return  [employee for employee in employees if float(employee["salary"]) > float(salary) ]
+    def employee_above_salary(self, db, salary):
+        employees = self.repository.employee_above_salary(
+            db, salary
+        )
+        print("Employees:", employees)
+        if not employees:
+            raise EmployeeNotFoundError(
+                f"No employees found above salary {salary}."
+            )
 
-
-    def group_by_department(self)->dict[str,int]:
-        employees = employee_service.get_all_employees()
-        department_count = {}
-        for employee in employees:
-            if employee["department"] not in department_count:
-                department_count[employee["department"]] = 1
-            else:
-                department_count[employee["department"]] += 1
-        return department_count
-
-
-
-
+        return employees

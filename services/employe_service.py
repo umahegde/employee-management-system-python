@@ -1,88 +1,52 @@
-import json
-from utils.constants import JSON_FILE
-from utils.logger import logger
 from exceptions.employee_exception import (
     EmployeeNotFoundError,
     DuplicateEmployeeError,
-    EmployeeDataFileError
+
 )
+from repositories.employee_repository import EmployeeRepository
+from models.employee_model import Employee
+
 class EmployeeService:
-
-    def load_data(self)->list[dict]:
-        try:
-            with open(JSON_FILE) as json_file:
-                return  json.load(json_file)
-
-        except FileNotFoundError:
-            logger.exception("Employee data file not found.")
-            raise EmployeeDataFileError("Employee data file not found.")
+    def __init__(self):
+        self.repository = EmployeeRepository()
 
 
-    def save_data(self,employees:list[dict])->None:
-        try:
-            with open(JSON_FILE, 'w') as outfile:
-                json.dump(employees, outfile, indent=4)
-            logger.info("Employee data saved successfully.")
-        except Exception:
-            logger.exception("Failed to save employee data.")
-
-    def add_employee(self, employee:dict):
-        employees = self.load_data()
-        for emp in employees:
-            if emp["emp_id"] == employee["emp_id"]:
-                raise DuplicateEmployeeError(
-                    f"Employee ID {employee['emp_id']} already exists."
-                )
-        employees.append(employee)
-        self.save_data(employees)
-
-    def get_all_employees(self)->list[dict]:
-       return  self.load_data()
-
-
-    def search_employee(self,emp_id:str)->dict:
-        employees = self.load_data()
-        for emp in employees  :
-            if emp["emp_id"] == emp_id:
-                return  emp
-
-        raise EmployeeNotFoundError(
-                f"Employee {emp_id} not found."
+    def add_employee(self, db, employee_data):
+        if self.repository.employee_exists(db, employee_data["emp_id"]):
+            raise DuplicateEmployeeError(
+                f"Employee {employee_data['emp_id']} already exists."
             )
 
-    def sort_by_salary(self)->list[dict]:
-        employees = self.load_data()
-        employees.sort(
-            key=lambda employee: float(employee["salary"]),
-            reverse=True
-        )
+        employee = Employee(**employee_data)
+
+        return self.repository.add_employee(db, employee)
+
+    def get_all_employees(self,db)->list[dict]:
+        employees = self.repository.get_all_employees(db)
         return employees
-    def delete_employee(self,emp_id:str)->bool:
-        employees = self.load_data()
-        for emp in employees :
-            if emp["emp_id"] == emp_id:
-                employees.remove(emp)
-                self.save_data(employees)
-                return True
 
-        raise EmployeeNotFoundError(
+
+    def search_employee(self, db, emp_id):
+        employee = self.repository.get_employee(db, emp_id)
+
+        if employee is None:
+            raise EmployeeNotFoundError(
                 f"Employee {emp_id} not found."
             )
 
+        return employee
 
-    def update_employee(self, emp_id:str,update_employee):
-        employees = self.load_data()
-        for index, employee in enumerate(employees):
+    def delete_employee(self,db,emp_id:str):
+        employee = self.repository.delete_employee(db, emp_id)
 
-            if employee["emp_id"] == emp_id:
-                employees[index] = update_employee
-
-                self.save_data(employees)
-
-                return True
-
-        raise EmployeeNotFoundError(
+        if employee is None:
+            raise EmployeeNotFoundError(
                 f"Employee {emp_id} not found."
             )
+        return employee
+
+    def update_employee(self,db, emp_id:str,update_employee):
+        employee = self.repository.update_employee(db,emp_id,update_employee.salary)
+        return employee
 
 

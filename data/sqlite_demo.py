@@ -64,7 +64,7 @@ def delete_employee(connection):
     connection.commit()
     print("Employee deleted")
 
-connection = sqlite3.connect("employee.db")
+connection = sqlite3.connect("../employee.db")
 get_employees(connection)
 
 connection.close()
