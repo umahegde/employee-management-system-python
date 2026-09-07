@@ -50,10 +50,10 @@ class EmployeeRepository:
 
         return employee
 
-    def get_all_employees(self, db):
+    def get_all_employees(self, db,page, page_size):
         statement = select(Employee).order_by(
             Employee.emp_id
-        )
+        ).offset((page - 1) * page_size).limit(page_size)
         result = db.execute(statement)
         employees = result.scalars().all()
         return employees

@@ -5,8 +5,11 @@ from schemas.employee_schema import EmployeeRequest,UpdateEmployeeRequest,Employ
 from typing import List
 from data.database import get_db
 from sqlalchemy.orm import Session
+from fastapi import Query
 
 router = APIRouter()
+page: int = Query(1, ge=1)
+page_size: int = Query(5, ge=1, le=100)
 
 def get_employee_service():
     return EmployeeService()
@@ -17,9 +20,9 @@ def get_analytics_service():
 
 @router.get("/employees",response_model=List[EmployeeResponse])
 def get_employees( db: Session = Depends(get_db),
-    service: EmployeeService = Depends(get_employee_service)
-):
-    return service.get_all_employees(db)
+    service: EmployeeService = Depends(get_employee_service),page: int = Query(1, ge=1),
+page_size: int = Query(5, ge=1, le=100)):
+    return service.get_all_employees(db,page,page_size)
 
 @router.get("/employees/count")
 def get_total_employees( db: Session = Depends(get_db),analytics :DataAnalytics = Depends(get_analytics_service)):

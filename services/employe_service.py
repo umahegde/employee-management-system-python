@@ -21,8 +21,8 @@ class EmployeeService:
 
         return self.repository.add_employee(db, employee)
 
-    def get_all_employees(self,db)->list[dict]:
-        employees = self.repository.get_all_employees(db)
+    def get_all_employees(self,db,page,page_size)->list[dict]:
+        employees = self.repository.get_all_employees(db,page,page_size)
         return employees
 
 
